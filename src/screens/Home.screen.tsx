@@ -1,3 +1,4 @@
+import format from 'date-fns/format';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -17,7 +18,10 @@ export const Home: React.FC = function () {
                     <View key={mood.timeStamp} style={styles.mood}>
                         <Text>{mood.emoji}</Text>
                         <Text style={styles.date}>
-                            {new Date(mood.timeStamp).toString()}
+                            {format(
+                                new Date(mood.timeStamp),
+                                "dd MMM, yyyy 'at' h:mmaa",
+                            )}
                         </Text>
                     </View>
                 );
