@@ -1,23 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+
+// import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+
+import { BottomTabsNavigator } from './screens/BottomTabs.navigator';
 
 export const App: React.FC = function () {
     return (
-        <View style={style.container}>
-            <Text style={style.text}>Hello !</Text>
-        </View>
+        <NavigationContainer>
+            <BottomTabsNavigator />
+        </NavigationContainer>
     );
 };
-
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'cornflowerblue',
-    },
-    text: {
-        color: 'white',
-        fontSize: 24,
-    },
-});
