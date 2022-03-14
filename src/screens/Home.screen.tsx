@@ -1,37 +1,18 @@
-import format from 'date-fns/format';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
+import { useAppContext } from '../App.provider';
 import { MoodPicker } from '../components/MoodPicker';
 import { theme } from '../theme';
-import { MoodOptionWithTimeStamp } from '../types';
 
 export const Home: React.FC = function () {
-    const [chosenMoods, setChosenMoods] = useState<MoodOptionWithTimeStamp[]>(
-        [],
-    );
+    const appContext = useAppContext();
+
     return (
         <View style={styles.container}>
-            <MoodPicker handleSelectedMood={addMood} />
-            {chosenMoods.map(mood => {
-                return (
-                    <View key={mood.timeStamp} style={styles.mood}>
-                        <Text>{mood.emoji}</Text>
-                        <Text style={styles.date}>
-                            {format(
-                                new Date(mood.timeStamp),
-                                "dd MMM, yyyy 'at' h:mmaa",
-                            )}
-                        </Text>
-                    </View>
-                );
-            })}
+            <MoodPicker handleSelectedMood={appContext.handleSelectedMood} />
         </View>
     );
-
-    function addMood(moodOptionWithTimeStamp: MoodOptionWithTimeStamp) {
-        setChosenMoods([...chosenMoods, moodOptionWithTimeStamp]);
-    }
 };
 
 const styles = StyleSheet.create({
@@ -40,13 +21,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'stretch',
         backgroundColor: theme.color.oldlace,
-    },
-    mood: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    date: {
-        fontSize: 10,
     },
 });
