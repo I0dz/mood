@@ -2,18 +2,24 @@ import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { theme } from '../theme';
-import { MoodOptionType } from '../types';
+import { MoodOption, MoodOptionWithTimeStamp } from '../types';
 
-const moodOptions: MoodOptionType[] = [
+const moodOptions: MoodOption[] = [
     { emoji: '🧑‍💻', description: 'studious' },
     { emoji: '🤔', description: 'pensive' },
     { emoji: '😊', description: 'happy' },
     { emoji: '🥳', description: 'celebratory' },
     { emoji: '😤', description: 'frustrated' },
 ];
-
-export const MoodPicker: React.FC = function () {
-    const [selectedMood, setSelectedMood] = useState<MoodOptionType>();
+interface MoodPickerProps {
+    handleSelectedMood: (
+        moodOptionWithTimeStamp: MoodOptionWithTimeStamp,
+    ) => void;
+}
+export const MoodPicker: React.FC<MoodPickerProps> = function ({
+    handleSelectedMood,
+}) {
+    const [selectedMood, setSelectedMood] = useState<MoodOption>();
     return (
         <View style={styles.moodPicker}>
             <Text style={styles.title}>How are you right now?</Text>
@@ -45,7 +51,16 @@ export const MoodPicker: React.FC = function () {
                     );
                 })}
             </View>
-            <Pressable style={styles.submit}>
+            <Pressable
+                style={styles.submit}
+                onPress={() => {
+                    if (selectedMood) {
+                        handleSelectedMood({
+                            ...selectedMood,
+                            timeStamp: Date.now(),
+                        });
+                    }
+                }}>
                 <Text style={styles.submitText}>Choose</Text>
             </Pressable>
         </View>
