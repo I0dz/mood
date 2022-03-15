@@ -12,6 +12,7 @@ export const History: React.FC = function () {
         <FlatList
             data={appContext.moods}
             renderItem={renderMood}
+            inverted={true}
             keyExtractor={item => String(item.timeStamp)}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
