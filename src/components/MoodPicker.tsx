@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import Reanimated, {
+    useAnimatedStyle,
+    withTiming,
+} from 'react-native-reanimated';
 
 import { theme } from '../theme';
 import { MoodOption, MoodOptionWithTimeStamp } from '../types';
@@ -16,14 +20,22 @@ interface MoodPickerProps {
         moodOptionWithTimeStamp: MoodOptionWithTimeStamp,
     ) => void;
 }
+
 const imageUrl =
     'https://images.unsplash.com/photo-1474540412665-1cdae210ae6b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1766&q=80';
+const ReanimatedPressable = Reanimated.createAnimatedComponent(Pressable);
 
 export const MoodPicker: React.FC<MoodPickerProps> = function ({
     handleSelectedMood,
 }) {
     const [selectedMood, setSelectedMood] = useState<MoodOption>();
     const [hasSelectedMood, setHasSelectedMood] = useState<boolean>(false);
+    const buttonStyle = useAnimatedStyle(() => {
+        return {
+            opacity: withTiming(selectedMood ? 1 : 0.5),
+            transform: [{ scale: selectedMood ? withTiming(1) : 0.8 }],
+        };
+    }, [selectedMood]);
     return (
         <View style={styles.home}>
             <Image
@@ -80,8 +92,8 @@ export const MoodPicker: React.FC<MoodPickerProps> = function ({
                             );
                         })}
                     </View>
-                    <Pressable
-                        style={styles.submit}
+                    <ReanimatedPressable
+                        style={[styles.submit, buttonStyle]}
                         onPress={() => {
                             if (selectedMood) {
                                 handleSelectedMood({
@@ -92,7 +104,7 @@ export const MoodPicker: React.FC<MoodPickerProps> = function ({
                             }
                         }}>
                         <Text style={styles.submitText}>Choose</Text>
-                    </Pressable>
+                    </ReanimatedPressable>
                 </View>
             )}
         </View>
@@ -120,6 +132,7 @@ const styles = StyleSheet.create({
         borderColor: theme.color.lightsalmon,
         backgroundColor: theme.color.oldlace,
         borderRadius: 8,
+        height: 270,
     },
     container: {
         marginVertical: 22,
@@ -134,6 +147,7 @@ const styles = StyleSheet.create({
     },
     mood: {
         alignItems: 'center',
+        height: 70,
     },
     moodEmoji: {
         fontSize: 22,
@@ -166,7 +180,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     image: {
-        height: 220,
+        height: 150,
         transform: [{ rotateZ: '-90deg' }],
         alignSelf: 'center',
     },
