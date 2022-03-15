@@ -35,8 +35,15 @@ interface AppContextProps {
     handleSelectedMood: (
         moodOptionWithTimeStamp: MoodOptionWithTimeStamp,
     ) => void;
+    handleDeletedMood: (
+        moodOptionWithTimeStamp: MoodOptionWithTimeStamp,
+    ) => void;
 }
-const defaultValue = { moods: [], handleSelectedMood: () => {} };
+const defaultValue = {
+    moods: [],
+    handleSelectedMood: () => {},
+    handleDeletedMood: () => {},
+};
 const AppContext = React.createContext<AppContextProps>(defaultValue);
 
 export const AppProvider: React.FC = function ({ children }) {
@@ -55,13 +62,25 @@ export const AppProvider: React.FC = function ({ children }) {
 
     return (
         <AppContext.Provider
-            value={{ moods: chosenMoods, handleSelectedMood: addMood }}>
+            value={{
+                moods: chosenMoods,
+                handleSelectedMood: addMood,
+                handleDeletedMood: deleteMood,
+            }}>
             {children}
         </AppContext.Provider>
     );
 
     function addMood(moodOptionWithTimeStamp: MoodOptionWithTimeStamp) {
         const moodList = [...chosenMoods, moodOptionWithTimeStamp];
+        setChosenMoods(moodList);
+        storeData({ moods: moodList });
+    }
+
+    function deleteMood(moodOptionWithTimeStamp: MoodOptionWithTimeStamp) {
+        const moodList = chosenMoods.filter(mood => {
+            return mood.timeStamp !== moodOptionWithTimeStamp.timeStamp;
+        });
         setChosenMoods(moodList);
         storeData({ moods: moodList });
     }

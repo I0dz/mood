@@ -1,6 +1,6 @@
 import format from 'date-fns/format';
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAppContext } from '../App.provider';
 import { theme } from '../theme';
@@ -27,12 +27,22 @@ export const History: React.FC = function () {
                 <Text style={styles.date}>
                     {format(new Date(item.timeStamp), 'dd MMM, yyyy')}
                 </Text>
+                <Pressable
+                    onPress={() => {
+                        appContext.handleDeletedMood(item);
+                    }}>
+                    <Text style={styles.deleteText}>delete</Text>
+                </Pressable>
             </View>
         );
     }
 };
 
 const styles = StyleSheet.create({
+    deleteText: {
+        fontFamily: theme.fonts.kalam.regular,
+        color: theme.color.lightsalmon,
+    },
     container: {
         flex: 1,
         alignItems: 'center',
@@ -42,7 +52,9 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
+        paddingLeft: 22,
+        paddingRight: 12,
     },
     description: {
         fontSize: 18,
