@@ -29,9 +29,21 @@ export const BottomTabsNavigator: React.FC = function () {
                 tabBarInactiveTintColor: theme.color.peach,
                 tabBarShowLabel: false,
             })}>
-            <BottomTabs.Screen name="Home" component={Home} />
-            <BottomTabs.Screen name="History" component={History} />
-            <BottomTabs.Screen name="Analytics" component={Analytics} />
+            <BottomTabs.Screen
+                name="Home"
+                component={Home}
+                options={{ title: "Today's mood", headerTitleAlign: 'center' }}
+            />
+            <BottomTabs.Screen
+                name="History"
+                component={History}
+                options={{ title: 'Past moods', headerTitleAlign: 'center' }}
+            />
+            <BottomTabs.Screen
+                name="Analytics"
+                component={Analytics}
+                options={{ title: 'Analytics', headerTitleAlign: 'center' }}
+            />
         </BottomTabs.Navigator>
     );
 };
