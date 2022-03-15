@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontFamily: theme.fonts.kalam.bold,
     },
     mood: {
         alignItems: 'center',
@@ -141,9 +141,11 @@ const styles = StyleSheet.create({
     moodDescription: {
         color: theme.color.lightsalmon,
         fontSize: 12,
+        fontFamily: theme.fonts.kalam.light,
     },
     moodButton: {
         padding: 10,
+        fontFamily: theme.fonts.kalam.regular,
     },
     selectedMoodButton: {
         backgroundColor: theme.color.peach,
@@ -158,7 +160,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     submitText: {
-        fontWeight: 'bold',
+        fontSize: 16,
+        fontFamily: theme.fonts.kalam.bold,
         color: theme.color.oldlace,
         alignSelf: 'center',
     },
@@ -170,6 +173,6 @@ const styles = StyleSheet.create({
     thank_you: {
         alignSelf: 'center',
         fontSize: 15,
-        fontWeight: '600',
+        fontFamily: theme.fonts.kalam.bold,
     },
 });

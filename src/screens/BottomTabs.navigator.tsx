@@ -32,17 +32,29 @@ export const BottomTabsNavigator: React.FC = function () {
             <BottomTabs.Screen
                 name="Home"
                 component={Home}
-                options={{ title: "Today's mood", headerTitleAlign: 'center' }}
+                options={{
+                    title: "Today's mood",
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: { fontFamily: theme.fonts.kalam.bold },
+                }}
             />
             <BottomTabs.Screen
                 name="History"
                 component={History}
-                options={{ title: 'Past moods', headerTitleAlign: 'center' }}
+                options={{
+                    title: 'Past moods',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: { fontFamily: theme.fonts.kalam.bold },
+                }}
             />
             <BottomTabs.Screen
                 name="Analytics"
                 component={Analytics}
-                options={{ title: 'Analytics', headerTitleAlign: 'center' }}
+                options={{
+                    title: 'Analytics',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: { fontFamily: theme.fonts.kalam.bold },
+                }}
             />
         </BottomTabs.Navigator>
     );

@@ -3,6 +3,7 @@ import React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import { useAppContext } from '../App.provider';
+import { theme } from '../theme';
 import { MoodOptionWithTimeStamp } from '../types';
 
 export const History: React.FC = function () {
@@ -22,12 +23,9 @@ export const History: React.FC = function () {
         return (
             <View key={item.timeStamp} style={styles.mood}>
                 <Text style={styles.emoji}>{item.emoji}</Text>
-                <Text style={styles.date}>{item.description}</Text>
+                <Text style={styles.description}>{item.description}</Text>
                 <Text style={styles.date}>
-                    {format(
-                        new Date(item.timeStamp),
-                        "dd MMM, yyyy 'at' h:mmaa",
-                    )}
+                    {format(new Date(item.timeStamp), 'dd MMM, yyyy')}
                 </Text>
             </View>
         );
@@ -46,9 +44,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
     },
+    description: {
+        fontSize: 18,
+        fontFamily: theme.fonts.kalam.bold,
+    },
     date: {
         fontSize: 16,
-        fontWeight: '600',
+        fontFamily: theme.fonts.kalam.regular,
     },
     emoji: {
         fontSize: 24,
