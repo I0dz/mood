@@ -30,7 +30,7 @@ async function getData(): Promise<AppData | null> {
     }
 }
 
-interface AppContextProps {
+export interface AppContextProps {
     moods: MoodOptionWithTimeStamp[];
     handleSelectedMood: (
         moodOptionWithTimeStamp: MoodOptionWithTimeStamp,

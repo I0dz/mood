@@ -1,27 +1,91 @@
 import format from 'date-fns/format';
 import React from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+    FlatList,
+    LayoutAnimation,
+    LogBox,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
+import {
+    GestureHandlerRootView,
+    PanGestureHandler,
+    PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
+import Reanimated, {
+    runOnJS,
+    useAnimatedGestureHandler,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
+} from 'react-native-reanimated';
 
-import { useAppContext } from '../App.provider';
+import { AppContextProps, useAppContext } from '../App.provider';
 import { theme } from '../theme';
 import { MoodOptionWithTimeStamp } from '../types';
+
+LogBox.ignoreLogs([
+    "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
+]);
 
 export const History: React.FC = function () {
     const appContext = useAppContext();
 
     return (
-        <FlatList
-            data={appContext.moods}
-            renderItem={renderMood}
-            inverted={true}
-            keyExtractor={item => String(item.timeStamp)}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-        />
+        <GestureHandlerRootView>
+            <FlatList
+                data={appContext.moods}
+                renderItem={({ item }) => {
+                    return <Mood item={item} appContext={appContext} />;
+                }}
+                inverted={true}
+                keyExtractor={item => String(item.timeStamp)}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+                contentContainerStyle={styles.container}
+            />
+        </GestureHandlerRootView>
     );
+};
 
-    function renderMood({ item }: { item: MoodOptionWithTimeStamp }) {
-        return (
-            <View key={item.timeStamp} style={styles.mood}>
+const Mood: React.FC<{
+    item: MoodOptionWithTimeStamp;
+    appContext: AppContextProps;
+}> = ({ item, appContext }) => {
+    const offsetX = useSharedValue(0);
+    const animatedMoodStyle = useAnimatedStyle(() => ({
+        transform: [{ translateX: offsetX.value }],
+    }));
+
+    const eventHandler = useAnimatedGestureHandler<
+        PanGestureHandlerGestureEvent,
+        { shouldRemove: boolean }
+    >({
+        onActive: (e, ctx) => {
+            offsetX.value = e.translationX;
+            if (Math.abs(offsetX.value) > 100) {
+                ctx.shouldRemove = true;
+            } else {
+                ctx.shouldRemove = false;
+            }
+        },
+        onEnd: (_, ctx) => {
+            if (ctx.shouldRemove) {
+                offsetX.value = withTiming(Math.sign(offsetX.value) * 1000);
+                runOnJS(removeWithDelay)(item);
+            } else {
+                offsetX.value = withTiming(0);
+            }
+        },
+    });
+    return (
+        <PanGestureHandler
+            activeOffsetX={[-10, 10]}
+            onGestureEvent={eventHandler}>
+            <Reanimated.View
+                key={item.timeStamp}
+                style={[styles.mood, animatedMoodStyle]}>
                 <Text style={styles.emoji}>{item.emoji}</Text>
                 <Text style={styles.description}>{item.description}</Text>
                 <Text style={styles.date}>
@@ -29,12 +93,21 @@ export const History: React.FC = function () {
                 </Text>
                 <Pressable
                     onPress={() => {
-                        appContext.handleDeletedMood(item);
+                        removeWithDelay(item);
                     }}>
                     <Text style={styles.deleteText}>delete</Text>
                 </Pressable>
-            </View>
-        );
+            </Reanimated.View>
+        </PanGestureHandler>
+    );
+
+    function removeWithDelay(mood: MoodOptionWithTimeStamp) {
+        setTimeout(() => {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut,
+            );
+            appContext.handleDeletedMood(mood);
+        }, 300);
     }
 };
 
@@ -44,8 +117,7 @@ const styles = StyleSheet.create({
         color: theme.color.lightsalmon,
     },
     container: {
-        flex: 1,
-        alignItems: 'center',
+        backgroundColor: theme.color.peach,
     },
     mood: {
         marginHorizontal: 4,
@@ -55,6 +127,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingLeft: 22,
         paddingRight: 12,
+        backgroundColor: theme.color.oldlace,
     },
     description: {
         fontSize: 18,
@@ -69,9 +142,9 @@ const styles = StyleSheet.create({
     },
     separator: {
         width: '100%',
-        borderWidth: 4,
-        borderColor: 'white',
-        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: theme.color.peach,
+        backgroundColor: theme.color.peach,
         alignSelf: 'center',
         marginVertical: 4,
     },
