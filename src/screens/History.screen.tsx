@@ -36,14 +36,18 @@ export const History: React.FC = function () {
     return (
         <GestureHandlerRootView>
             <FlatList
-                data={appContext.moods}
+                data={appContext.moods.slice().reverse()}
                 renderItem={({ item }) => {
                     return <Mood item={item} appContext={appContext} />;
                 }}
-                inverted={true}
                 keyExtractor={item => String(item.timeStamp)}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
                 contentContainerStyle={styles.container}
+                ListEmptyComponent={() => (
+                    <View style={styles.empty}>
+                        <Text>No mood saved yet.</Text>
+                    </View>
+                )}
             />
         </GestureHandlerRootView>
     );
@@ -118,6 +122,7 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: theme.color.peach,
+        minHeight: '100%',
     },
     mood: {
         marginHorizontal: 4,
@@ -147,5 +152,10 @@ const styles = StyleSheet.create({
         backgroundColor: theme.color.peach,
         alignSelf: 'center',
         marginVertical: 4,
+    },
+    empty: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
