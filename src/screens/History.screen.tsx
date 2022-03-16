@@ -107,9 +107,16 @@ const Mood: React.FC<{
 
     function removeWithDelay(mood: MoodOptionWithTimeStamp) {
         setTimeout(() => {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut,
-            );
+            LayoutAnimation.configureNext({
+                duration: 300,
+                create: {
+                    type: LayoutAnimation.Types.easeInEaseOut,
+                    property: LayoutAnimation.Properties.opacity,
+                },
+                update: {
+                    type: LayoutAnimation.Types.easeInEaseOut,
+                },
+            });
             appContext.handleDeletedMood(mood);
         }, 300);
     }
